@@ -1,0 +1,11 @@
+prefix=/workspaces/a2a_binary_classifier/.conda
+exec_prefix=/workspaces/a2a_binary_classifier/.conda
+libdir=/workspaces/a2a_binary_classifier/.conda/lib
+includedir=/workspaces/a2a_binary_classifier/.conda/include
+
+Name: uuid
+Description: Universally unique id library
+Version: 2.32.1
+Requires:
+Cflags: -I${includedir}/uuid
+Libs: -L${libdir} -luuid
