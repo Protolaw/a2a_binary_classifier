@@ -1,0 +1,14 @@
+{
+ "argv": [
+  "/workspaces/a2a_binary_classifier/.conda/bin/python",
+  "-m",
+  "ipykernel_launcher",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "Python 3 (ipykernel)",
+ "language": "python",
+ "metadata": {
+  "debugger": true
+ }
+}

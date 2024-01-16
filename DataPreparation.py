@@ -51,6 +51,7 @@ class DataPreparation:
         self.y_train = y_train
         self.y_test = y_test
         self.threshold = threshold
+        self.feature_names = X_train.columns
 
     def remove_collinear_features_train(self):
 
@@ -95,25 +96,38 @@ class DataPreparation:
     def remove_collinear_features(self, drops):
         self.X_train = self.X_train.drop(columns=drops)
         self.X_test = self.X_test.drop(columns=drops)
+        self.feature_names = self.X_train.columns
 
         return self.X_train, self.X_test
 
     def remove_constant_features(self):
 
         var_tresh = feature_selection.VarianceThreshold(threshold=0.7)
+        # print('constant_feat', self.X_train.columns)
 
         self.X_train = var_tresh.fit_transform(self.X_train)
         self.X_test = var_tresh.transform(self.X_test)
+        # features = var_tresh.get_support(indices = True) #returns an array of integers corresponding to nonremoved features
+        # self.feature_names = [column for column in self.X_train[features]]
+        # self.feature_names = self.X_train.loc[:, var_tresh.get_support()].columns
 
-        return self.X_train, self.X_test
+        features_idxs = var_tresh.get_support(indices = True)
+        self.feature_names = self.feature_names[features_idxs]
+        # print(self.feature_names[features_idxs]) #returns an array of integers corresponding to nonremoved features
+        # # features = [column for column in self.X_train[features]] #Array of all nonremoved features' names
+        # print('constant_feat', self.X_train.columns)
+
+        return self.X_train, self.X_test, self.feature_names
+    
 
     def scaling(self):
 
         scaler = preprocessing.StandardScaler()
         scaler = scaler.fit(self.X_train)
-
-        self.X_train = pd.DataFrame(scaler.transform(self.X_train))
-        self.X_test = pd.DataFrame(scaler.transform(self.X_test))
+        column_names = self.X_train.columns
+        self.X_train = pd.DataFrame(scaler.transform(self.X_train),columns=self.feature_names)
+        self.X_test = pd.DataFrame(scaler.transform(self.X_test),columns=self.feature_names)
+        # print("scaling", self.X_test.columns)
         return self.X_train, self.X_test
 
     def clean_dataset(self):
@@ -124,6 +138,12 @@ class DataPreparation:
 
         self.X_train, self.X_test = self.scaling()
 
-        self.X_train, self.X_test = self.remove_constant_features()
+        self.X_train, self.X_test, features = self.remove_constant_features()
+
+        # self.X_train = pd.DataFrame(self.X_train).set_axis(features, 
+        #                                                    axis=1)
+        # self.X_test = pd.DataFrame(self.X_test).set_axis(features, 
+        #                                                  axis=1)
+        print(features)
 
         return pd.DataFrame(self.X_train), pd.DataFrame(self.X_test), self.y_train, self.y_test
