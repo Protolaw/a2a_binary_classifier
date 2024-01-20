@@ -140,10 +140,10 @@ class DataPreparation:
 
         self.X_train, self.X_test, features = self.remove_constant_features()
 
-        # self.X_train = pd.DataFrame(self.X_train).set_axis(features, 
-        #                                                    axis=1)
-        # self.X_test = pd.DataFrame(self.X_test).set_axis(features, 
-        #                                                  axis=1)
-        print(features)
+        self.X_train = pd.DataFrame(self.X_train).set_axis(features, 
+                                                           axis=1)
+        self.X_test = pd.DataFrame(self.X_test).set_axis(features, 
+                                                         axis=1)
+        # print(features)
 
         return pd.DataFrame(self.X_train), pd.DataFrame(self.X_test), self.y_train, self.y_test
